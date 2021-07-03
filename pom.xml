@@ -9,13 +9,14 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>basic-api</artifactId>
+	<artifactId>budget-app-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Budget App Backend</name>
+	<description>Budget App Backend written in Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
 		<springfox-swagger.version>2.6.1</springfox-swagger.version>
+		<app.swagger-generated-directory>${project.build.directory}/generated-sources</app.swagger-generated-directory>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -28,11 +29,13 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -50,6 +53,7 @@
 			<artifactId>springfox-swagger2</artifactId>
 			<version>${springfox-swagger.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
@@ -62,20 +66,20 @@
 			<artifactId>threetenbp</artifactId>
 			<version>1.5.1</version>
 		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/com.github.joschi.jackson/jackson-datatype-threetenbp -->
 		<dependency>
 			<groupId>com.github.joschi.jackson</groupId>
 			<artifactId>jackson-datatype-threetenbp</artifactId>
 			<version>2.6.4</version>
 		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
 			<version>2.4.0-b180830.0359</version>
 		</dependency>
-
-
 	</dependencies>
 
 	<build>
@@ -105,11 +109,12 @@
 						</goals>
 						<configuration>
 							<inputSpec>${project.basedir}/src/main/resources/api.yaml</inputSpec>
-							<output>${project.build.directory}/generated-sources/open-api</output>
+							<output>${app.swagger-generated-directory}</output>
 							<language>spring</language>
 							<apiPackage>com.example.demo.api</apiPackage>
 							<modelPackage>com.example.demo.model</modelPackage>
 							<addCompileSourceRoot>false</addCompileSourceRoot>
+							<withXml>true</withXml>
 							<configOptions>
 								<sourceFolder>.</sourceFolder>
 							</configOptions>
@@ -118,6 +123,7 @@
 				</executions>
 			</plugin>
 
+			<!--Cleans the non required files-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
@@ -133,9 +139,10 @@
 							<excludeDefaultDirectories>true</excludeDefaultDirectories>
 							<filesets>
 								<fileset>
-									<directory>${basedir}/target/generated-sources</directory>
+									<directory>${app.swagger-generated-directory}</directory>
 									<includes>
 										<include>**/Swagger2SpringBoot.java</include>
+										<include>**/*Controller.java</include>
 									</includes>
 								</fileset>
 							</filesets>
@@ -158,15 +165,12 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>${basedir}/target/generated-sources</source>
+								<source>${app.swagger-generated-directory}</source>
 							</sources>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-
-
-
 		</plugins>
 	</build>
 
