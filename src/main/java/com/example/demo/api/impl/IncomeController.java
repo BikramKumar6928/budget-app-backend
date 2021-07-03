@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class IncomeController implements IncomeApi {
@@ -15,7 +16,7 @@ public class IncomeController implements IncomeApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteIncomeById(Long incomeId) {
+    public ResponseEntity<Void> deleteIncomeById(UUID incomeId) {
         return null;
     }
 
@@ -25,10 +26,8 @@ public class IncomeController implements IncomeApi {
     }
 
     @Override
-    public ResponseEntity<Income> getIncomeById(Long incomeId) {
-        Income income = new Income();
-        income.setId(incomeId);
-        return ResponseEntity.ok(income);
+    public ResponseEntity<Income> getIncomeById(UUID incomeId) {
+        return null;
     }
 
     @Override
