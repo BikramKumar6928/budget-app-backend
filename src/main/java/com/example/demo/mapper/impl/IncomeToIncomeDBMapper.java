@@ -22,6 +22,6 @@ public class IncomeToIncomeDBMapper implements MapperInterface<Income, IncomeDB>
                 .amount(incomeDB.amount())
                 .id(incomeDB.id())
                 .description(incomeDB.description())
-                .budget(0L);
+                .budget(incomeDB.budget());
     }
 }
