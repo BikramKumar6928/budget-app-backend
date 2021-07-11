@@ -1,6 +1,5 @@
 package com.example.demo.model;
 
-import com.example.demo.enums.IncomeType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -31,5 +30,5 @@ public class IncomeDB {
 
     @Column(name = "income_type")
     @Enumerated(EnumType.STRING)
-    private IncomeType incomeType;
+    private Income.TypeEnum incomeType;
 }

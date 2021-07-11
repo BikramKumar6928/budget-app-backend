@@ -289,7 +289,10 @@ definitions:
       description:
         type: "string"
       type:
-        type: "string"
+        type: string
+        enum: &IncomeType
+          - INCOME
+          - EXPENSE
     xml:
       name: "Income"
   Group:
