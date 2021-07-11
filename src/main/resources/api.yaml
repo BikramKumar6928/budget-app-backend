@@ -2,134 +2,19 @@ swagger: "2.0"
 info:
   description: "Swagger for Budget App"
   version: "1.0.0"
-  title: "Swagger Petstore"
+  title: "Budget App"
 tags:
-  - name: "income"
+  - name: "Income"
     description: "Income"
-  - name: "group"
+  - name: "Group"
     description: "Group"
 schemes:
   - "http"
 paths:
-  /income:
-    post:
-      tags:
-        - "income"
-      summary: "Add a new income"
-      description: ""
-      operationId: "addIncome"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "Income object that needs to be added"
-          required: true
-          schema:
-            $ref: "#/definitions/Income"
-      responses:
-        "201" :
-          description: "Created"
-          schema:
-            $ref: "#/definitions/Income"
-        "405":
-          description: "Invalid input"
-          schema:
-            $ref: '#/definitions/ModelApiResponse'
-    put:
-      tags:
-        - "income"
-      summary: "Update income"
-      description: ""
-      operationId: "updateIncome"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "Income object that needs to be added"
-          required: true
-          schema:
-            $ref: "#/definitions/Income"
-      responses:
-        "200":
-          description: "Updated"
-          schema:
-            $ref: "#/definitions/Income"
-        "400":
-          description: "Invalid ID supplied"
-        "404":
-          description: "Pet not found"
-        "405":
-          description: "Validation exception"
-    get:
-      tags:
-        - "income"
-      summary: "Get all Income"
-      description: ""
-      operationId: "getAllIncome"
-      produces:
-        - "application/json"
-      responses:
-        "200":
-          description: "All Income"
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/Income"
-  /income/{incomeId}:
-    get:
-      tags:
-        - "income"
-      summary: "Find income by ID"
-      description: "Returns a single income"
-      operationId: "getIncomeById"
-      produces:
-        - "application/json"
-      parameters:
-        - name: "incomeId"
-          in: "path"
-          description: "ID of income to return"
-          required: true
-          type: "string"
-          format: "uuid"
-      responses:
-        "200":
-          description: "Successful operation"
-          schema:
-            $ref: "#/definitions/Income"
-        "400":
-          description: "Invalid ID supplied"
-        "404":
-          description: "Income not found"
-    delete:
-      tags:
-        - "income"
-      summary: "Delete income by ID"
-      description: "Deletes a single income"
-      operationId: "deleteIncomeById"
-      parameters:
-        - name: "incomeId"
-          in: "path"
-          description: "ID of income to delete"
-          required: true
-          type: "string"
-          format: "uuid"
-      responses:
-        "200":
-          description: "Successful operation"
-        "400":
-          description: "Invalid ID supplied"
-        "404":
-          description: "Income not found"
   /group:
     post:
       tags:
-        - "group"
+        - "Group"
       summary: "Add a new group"
       description: ""
       operationId: "addGroup"
@@ -155,7 +40,7 @@ paths:
             $ref: '#/definitions/ModelApiResponse'
     put:
       tags:
-        - "group"
+        - "Group"
       summary: "Update group"
       description: ""
       operationId: "updateGroup"
@@ -183,7 +68,7 @@ paths:
           description: "Validation exception"
     get:
       tags:
-        - "group"
+        - "Group"
       summary: "Get all Group"
       description: ""
       operationId: "getAllGroup"
@@ -199,7 +84,7 @@ paths:
   /group/{groupId}:
     get:
       tags:
-        - "group"
+        - "Group"
       summary: "Find group by ID"
       description: "Returns a single group"
       operationId: "getGroupById"
@@ -223,7 +108,7 @@ paths:
           description: "Group not found"
     delete:
       tags:
-        - "group"
+        - "Group"
       summary: "Delete group by ID"
       description: "Deletes a single group"
       operationId: "deleteGroupById"
@@ -241,12 +126,159 @@ paths:
           description: "Invalid ID supplied"
         "404":
           description: "Group not found"
+  /group/{groupId}/income:
+    post:
+      tags:
+        - "Income"
+      summary: "Add a new income"
+      description: ""
+      operationId: "addIncome"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "groupId"
+          in: "path"
+          description: "ID of group"
+          required: true
+          type: "string"
+          format: "uuid"
+        - in: "body"
+          name: "body"
+          description: "Income object that needs to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/Income"
+      responses:
+        "201" :
+          description: "Created"
+          schema:
+            $ref: "#/definitions/Income"
+        "405":
+          description: "Invalid input"
+          schema:
+            $ref: '#/definitions/ModelApiResponse'
+    put:
+      tags:
+        - "Income"
+      summary: "Update income"
+      description: ""
+      operationId: "updateIncome"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "groupId"
+          in: "path"
+          description: "ID of group"
+          required: true
+          type: "string"
+          format: "uuid"
+        - in: "body"
+          name: "body"
+          description: "Income object that needs to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/Income"
+      responses:
+        "200":
+          description: "Updated"
+          schema:
+            $ref: "#/definitions/Income"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Pet not found"
+        "405":
+          description: "Validation exception"
+    get:
+      tags:
+        - "Income"
+      summary: "Get all Income"
+      description: ""
+      operationId: "getAllIncome"
+      parameters:
+        - name: "groupId"
+          in: "path"
+          description: "ID of group"
+          required: true
+          type: "string"
+          format: "uuid"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "All Income"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Income"
+  /group/{groupId}/income/{incomeId}:
+    get:
+      tags:
+        - "Income"
+      summary: "Find income by ID"
+      description: "Returns a single income"
+      operationId: "getIncomeById"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "groupId"
+          in: "path"
+          description: "ID of group"
+          required: true
+          type: "string"
+          format: "uuid"
+        - name: "incomeId"
+          in: "path"
+          description: "ID of income to return"
+          required: true
+          type: "string"
+          format: "uuid"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Income"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Income not found"
+    delete:
+      tags:
+        - "Income"
+      summary: "Delete income by ID"
+      description: "Deletes a single income"
+      operationId: "deleteIncomeById"
+      parameters:
+        - name: "groupId"
+          in: "path"
+          description: "ID of group"
+          required: true
+          type: "string"
+          format: "uuid"
+        - name: "incomeId"
+          in: "path"
+          description: "ID of income to delete"
+          required: true
+          type: "string"
+          format: "uuid"
+      responses:
+        "200":
+          description: "Successful operation"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Income not found"
 definitions:
   Income:
     type: "object"
     required:
       - "amount"
       - "description"
+      - "type"
     properties:
       id:
         type: "string"
@@ -256,9 +288,8 @@ definitions:
         format: "int64"
       description:
         type: "string"
-      budget:
-        type: "integer"
-        format: "int64"
+      type:
+        type: "string"
     xml:
       name: "Income"
   Group:
@@ -277,8 +308,12 @@ definitions:
       budget:
         type: "integer"
         format: "int64"
+      incomeList:
+        type: array
+        items:
+          $ref: "#/definitions/Income"
     xml:
-      name: "Income"
+      name: "Group"
   ModelApiResponse:
     type: "object"
     properties:
