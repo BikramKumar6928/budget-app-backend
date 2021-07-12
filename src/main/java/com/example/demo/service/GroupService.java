@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.BudgetException;
 import com.example.demo.mapper.impl.GroupToGroupDBMapper;
 import com.example.demo.mapper.impl.IncomeToIncomeDBMapper;
 import com.example.demo.model.Group;
@@ -8,7 +7,6 @@ import com.example.demo.model.GroupDB;
 import com.example.demo.model.Income;
 import com.example.demo.model.IncomeDB;
 import com.example.demo.repository.GroupRepository;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,22 +64,47 @@ public class GroupService {
 
     public Income addIncome(UUID groupId, Income income) {
         GroupDB groupDB = groupRepository.getById(groupId);
-        Map<UUID, IncomeDB> currentIncome = groupDB.incomeMap();
         Income updatedIncome = incomeService.enrichIncome(income);
-        UUID incomeId = updatedIncome.getId();
-        IncomeDB incomeDB = incomeToIncomeDBMapper.map(income);
+        IncomeDB incomeDB = incomeToIncomeDBMapper.map(updatedIncome);
+
+        UUID incomeId = incomeDB.id();
+
+        GroupDB updatedDB = addIncomeToGroup(groupDB, incomeDB);
+        GroupDB savedGroupDB = groupRepository.save(updatedDB);
+
+        IncomeDB savedIncomeDB = savedGroupDB.incomeMap().get(incomeId);
+        return incomeToIncomeDBMapper.reverseMap(savedIncomeDB);
+    }
+
+    private GroupDB addIncomeToGroup(GroupDB groupDB, IncomeDB incomeDB) {
+        UUID incomeId = incomeDB.id();
+        Map<UUID, IncomeDB> currentIncome = groupDB.incomeMap();
         currentIncome.put(incomeId, incomeDB);
         groupDB.incomeMap(currentIncome);
-        GroupDB updatedGroupDB = groupRepository.save(groupDB);
-        IncomeDB updatedIncomeDB = updatedGroupDB.incomeMap().get(incomeId);
-        return incomeToIncomeDBMapper.reverseMap(updatedIncomeDB);
+        long updatedBudget = getUpdatedBudget(groupDB.budget(), incomeDB, true);
+        groupDB.budget(updatedBudget);
+        return groupDB;
+    }
+
+    private long getUpdatedBudget(long budget, IncomeDB incomeDBToBeAdded, boolean isAdded) {
+        boolean isIncome = Income.TypeEnum.INCOME.equals(incomeDBToBeAdded.incomeType());
+        boolean shouldAdd = (isAdded && isIncome) || (!isAdded && !isIncome);
+        if(shouldAdd){
+            return budget + incomeDBToBeAdded.amount();
+        }
+        return budget - incomeDBToBeAdded.amount();
     }
 
     public void deleteIncome(UUID groupId, UUID incomeId) {
         GroupDB groupDB = groupRepository.getById(groupId);
+
         Map<UUID, IncomeDB> currentIncomeMap = groupDB.incomeMap();
+        IncomeDB currentIncome = currentIncomeMap.get(incomeId);
+        long updatedBudget = getUpdatedBudget(groupDB.budget(), currentIncome, false);
+        groupDB.budget(updatedBudget);
         currentIncomeMap.remove(incomeId);
         groupDB.incomeMap(currentIncomeMap);
+
         groupRepository.save(groupDB);
     }
 
@@ -102,7 +125,14 @@ public class GroupService {
         UUID incomeId = income.getId();
         Income updatedIncome = incomeService.enrichIncome(income);
         IncomeDB updatedIncomeDB = incomeToIncomeDBMapper.map(updatedIncome);
-        groupDB.incomeMap().put(incomeId, updatedIncomeDB);
+        Map<UUID, IncomeDB> incomeDBMap = groupDB.incomeMap();
+        IncomeDB olderIncomeDB = incomeDBMap.get(incomeId);
+
+        long budgetAfterRemovingOldIncome = getUpdatedBudget(groupDB.budget(), olderIncomeDB, false);
+        long budgetAfterAddingNewIncome = getUpdatedBudget(budgetAfterRemovingOldIncome, updatedIncomeDB, true);
+
+        groupDB.budget(budgetAfterAddingNewIncome);
+        incomeDBMap.put(incomeId, updatedIncomeDB);
         GroupDB updatedGroupDB = groupRepository.save(groupDB);
         IncomeDB incomeDB = updatedGroupDB.incomeMap().get(incomeId);
         return incomeToIncomeDBMapper.reverseMap(incomeDB);

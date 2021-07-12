@@ -4,6 +4,7 @@ import com.example.demo.mapper.MapperInterface;
 import com.example.demo.model.Group;
 import com.example.demo.model.GroupDB;
 import com.example.demo.model.Income;
+import com.example.demo.utils.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +24,8 @@ public class GroupToGroupDBMapper implements MapperInterface<Group, GroupDB> {
                 .name(group.getName())
                 .description(group.getDescription())
                 .budget(group.getBudget())
-                .incomeMap(group
-                        .getIncomeList()
+                .incomeMap(ListUtils.mutableEmptyIfNull(group
+                        .getIncomeList())
                         .stream()
                         .collect(Collectors
                                 .toMap(
