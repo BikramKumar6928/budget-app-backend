@@ -14,7 +14,7 @@
 	<name>Budget App Backend</name>
 	<description>Budget App Backend written in Spring Boot</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 		<springfox-swagger.version>3.0.0</springfox-swagger.version>
 		<app.swagger-generated-directory>${project.build.directory}/generated-sources</app.swagger-generated-directory>
 	</properties>
